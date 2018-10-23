@@ -9,13 +9,31 @@ class Tweet {
 
 	//returns either 'live_event', 'achievement', 'completed_event', or 'miscellaneous'
     get source():string {
-        return "unknown";
+        var sub_text = this.text.substr(0,15);
+
+        if(sub_text.startsWith("Just completed") || sub_text.startsWith("Just posted")){
+            return "completed_event";
+        }
+        else if(sub_text.startsWith("Achieved")){
+            return "achievement";
+        }
+        else if(sub_text.startsWith("Watch my")){
+            return "live_event";
+        }
+        return "miscellaneous";
+        // return "unknown";
     }
 
     //returns a boolean, whether the text includes any content written by the person tweeting.
     get written():boolean {
-        return false;
+        //return false;
         //TODO: identify whether the tweet is written
+
+        //var hyphen_occurrences = this.text.match(/-/g).length;
+        if(this.text.includes("-") && !(this.text.includes("TomTom")) ){
+            return true;
+        }
+        return false;
     }
 
     get writtenText():string {
