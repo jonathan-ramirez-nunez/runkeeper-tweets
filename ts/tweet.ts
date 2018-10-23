@@ -41,7 +41,11 @@ class Tweet {
             return "";
         }
         //TODO: parse the written text from the tweet
-        return "";
+        var writtentext_start = this.text.indexOf("-");
+        var writtentext_end = this.text.indexOf(" http");
+        var writtentext = this.text.substr(writtentext_start, writtentext_end);
+        return writtentext;
+        //return "";
     }
 
     get activityType():string {

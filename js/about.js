@@ -1,3 +1,8 @@
+function parseTime(created_at) {
+	// "Sun Sep 23 07:01:07 +0000 2018"
+
+}
+
 function parseTweets(runkeeper_tweets) {
 	//Do not proceed if no tweets loaded
 	if(runkeeper_tweets === undefined) {
@@ -11,8 +16,12 @@ function parseTweets(runkeeper_tweets) {
 	
 	$('#numberTweets').text(tweet_array.length);
 	//TODO: remove these
+	var latest_tweet = tweet_array[0];
+	var earliest_tweet = tweet_array[tweet_array.length-1];
 	$('#firstDate').text(earliest_tweet.time.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
 	$('#lastDate').text(latest_tweet.time.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
+	// add the rest with math and tweet.ts functions
+
 }
 
 //Wait for the DOM to load
