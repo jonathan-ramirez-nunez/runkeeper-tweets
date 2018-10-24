@@ -141,7 +141,8 @@ function parseTweets(runkeeper_tweets) {
 	$('#thirdMost').text(activities[2].type);
 	console.log(unaccounted,"= unaccounted for activities.");
 
-	// place dist_counter in run, walk and bike. parse distances in tweet.ts 
+	// place dist_counter in run, walk and bike. parse distances in tweet.ts
+	// check that its a comp event first 
 
 	activity_vis_spec = {
 	  "$schema": "https://vega.github.io/schema/vega-lite/v2.6.0.json",
