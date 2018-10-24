@@ -53,6 +53,99 @@ class Tweet {
             return "unknown";
         }
         //TODO: parse the activity type from the text of the tweet
+        if(this.text.includes(" ski run ") ){
+            return "ski run";
+        }
+        else if(this.text.includes(" run ") ){
+            return "run";
+        }
+        else if(this.text.includes(" nordic walk ") ){
+            return "nordic walk";
+        }
+        else if(this.text.includes(" walk ") ){
+            return "walk";
+        }
+        else if(this.text.includes(" mtn bike ") ){
+            return "mtn bike";
+        }
+        else if(this.text.includes(" bike ") ){
+            return "bike";
+        }
+        else if(this.text.includes(" swim ") ){
+            return "swim";
+        }
+        else if(this.text.includes(" CrossFit\u00ae ") ){
+            return "CrossFit\u00ae";
+        }
+        else if(this.text.includes(" hike ") ){
+            return "hike";
+        }
+        else if(this.text.includes(" elliptical workout ") ){
+            return "elliptical workout";
+        }
+        else if(this.text.includes(" strength workout ") ){
+            return "strength workout";
+        }
+        else if(this.text.includes(" spinning workout ") ){
+            return "spinning workout";
+        }
+        else if(this.text.includes(" circuit workout ") ){
+            return "circuit workout";
+        }
+        else if(this.text.includes(" bootcamp workout ") ){
+            return "bootcamp workout";
+        }
+        else if(this.text.includes(" core workout ") ){
+            return "core workout";
+        }
+        else if(this.text.includes(" group workout ") ){
+            return "group workout";
+        }
+        else if(this.text.includes(" barre workout ") ){
+            return "barre workout";
+        }
+        else if(this.text.includes(" row ") ){
+            return "row";
+        }
+        else if(this.text.includes(" MySports Freestyle ") ){
+            return "MySports Freestyle";
+        }
+        else if(this.text.includes(" activity ") ){
+            return "activity";
+        }
+        else if(this.text.includes(" yoga practice ") ){
+            return "yoga practice";
+        }
+        else if(this.text.includes(" skate ") ){
+            return "skate";
+        }
+        else if(this.text.includes(" chair ride ") ){
+            return "chair ride";
+        }
+        else if(this.text.includes(" snowboard ") ){
+            return "snowboard";
+        }
+        else if(this.text.includes(" stairmaster / stepwell workout ") ){
+            return "stairmaster / stepwell workout";
+        }
+        else if(this.text.includes(" meditation ") ){
+            return "meditation";
+        }
+        else if(this.text.includes(" pilates session ") ){
+            return "pilates session";
+        }
+        else if(this.text.includes(" boxing / MMA ") ){
+            return "boxing / MMA";
+        }
+        else if(this.text.includes(" sports ") ){
+            return "sports";
+        }
+        else if(this.text.includes(" MySports Gym ") ){
+            return "MySports Gym";
+        }
+        else if(this.text.includes(" dance ") ){
+            return "dance";
+        }
         return "";
     }
 
