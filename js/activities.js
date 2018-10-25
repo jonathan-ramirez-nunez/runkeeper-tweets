@@ -8,9 +8,9 @@ function parseTweets(runkeeper_tweets) {
 	tweet_array = runkeeper_tweets.map(function(tweet) {
 		return new Tweet(tweet.text, tweet.created_at);
 	});
-
-	var run={type:"run",count:0,dist_count=0},nordic={type:"nordic walk",count:0},walk={type:"walk",count:0,dist_count=0},
-	mtnbike={type:"mtn bike",count:0},bike={type:"bike",count:0,dist_count=0},swim={type:"swim",count:0},
+	
+	var run={type:"run",count:0,dist_count:0},nordic={type:"nordic walk",count:0},walk={type:"walk",count:0,dist_count:0},
+	mtnbike={type:"mtn bike",count:0},bike={type:"bike",count:0,dist_count:0},swim={type:"swim",count:0},
 	crossfit={type:"CrossFit\u00ae",count:0},hike={type:"hike",count:0},elliptical={type:"elliptical workout",count:0},
 	strength={type:"strength workout",count:0},spinning={type:"spinning workout",count:0},
 	circuit={type:"circuit workout",count:0},bootcamp={type:"bootcamp workout",count:0},
@@ -143,6 +143,80 @@ function parseTweets(runkeeper_tweets) {
 
 	// place dist_counter in run, walk and bike. parse distances in tweet.ts
 	// check that its a comp event first 
+	for(var i=0; i<tweet_array.length; ++i){
+		switch(tweet_array[i].activityType){
+			case "run":
+				run.dist_count += tweet_array[i].distance;
+				break;
+			case "walk":
+				walk.dist_count += tweet_array[i].distance;
+				break;
+			case "bike":
+				bike.dist_count += tweet_array[i].distance;
+				break;
+			default:
+				break;
+		}
+	}
+	var mean_distances = [];
+	mean_distances.push(run);
+	mean_distances.push(walk);
+	mean_distances.push(bike);
+	// mean distances in descending order
+	mean_distances.sort(function(a, b){return (b.dist_count/b.count)-(a.dist_count/a.count)})
+	//mean_distances.push(math.format((run.dist_count/run.count), {notation: 'fixed', precision: 2}));
+	$('#longestActivityType').text(mean_distances[0].type);
+	$('#shortestActivityType').text(mean_distances[mean_distances.length-1].type);
+
+	var sunday={dist:0,count:0,day:"Sunday"},saturday={dist:0,count:0,day:"Saturday"},
+	friday={dist:0,count:0,day:"Friday"},thursday={dist:0,count:0,day:"Thursday"},
+	wednesday={dist:0,count:0,day:"Wednesday"},tuesday={dist:0,count:0,day:"Tuesday"},
+	monday={dist:0,count:0,day:"Monday"};
+	for(var i=0; i<tweet_array.length; ++i){
+		if(tweet_array[i].activityType === mean_distances[0].type){
+			switch(tweet_array[i].time.getDay()){
+				case 0:
+					sunday.dist += tweet_array[i].distance;
+					++sunday.count;
+					break;
+				case 6:
+					saturday.dist += tweet_array[i].distance;
+					++saturday.count;
+					break;
+				case 5:
+					friday.dist += tweet_array[i].distance;
+					++friday.count;
+					break;
+				case 4:
+					thursday.dist += tweet_array[i].distance;
+					++thursday.count;
+					break;
+				case 3:
+					wednesday.dist += tweet_array[i].distance;
+					++wednesday.count;
+					break;
+				case 2:
+					tuesday.dist += tweet_array[i].distance;
+					++tuesday.count;
+					break;
+				case 1:
+					monday.dist += tweet_array[i].distance;
+					++monday.count;
+					break;
+			}
+		}
+	}
+	var days = [];
+	days.push(sunday);
+	days.push(saturday);
+	days.push(friday);
+	days.push(thursday);
+	days.push(wednesday);
+	days.push(tuesday);
+	days.push(monday);
+	// mean distances for days in descending order
+	days.sort(function(a, b){return (b.dist/b.count)-(a.dist/a.count)});
+	$('#weekdayOrWeekendLonger').text(days[0].day);
 
 	activity_vis_spec = {
 	  "$schema": "https://vega.github.io/schema/vega-lite/v2.6.0.json",

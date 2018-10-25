@@ -157,14 +157,14 @@ class Tweet {
         var regex = /[0-9]/;
         //var regex = /^[0-9]$/;
         //var regex = new RegExp('[0-9]');
-        var first_digit = this.text.match(regex);
-        console.log(first_digit);
-        var index_start = this.text.indexOf(first_digit[0]);   //still work if first_digit is a number?
+        //var first_digit = this.text.match(regex);
+        var index_start = this.text.search(regex);
+        //var index_start = this.text.indexOf(first_digit[0]);   //still work if first_digit is a number?
         var return_dist = 0;
         
         if(this.activityType === "run"){    
             var index_end = this.text.indexOf(" run ");
-            var distance = this.text.substr(index_start, index_end);   // "1.02 km"
+            var distance = this.text.substring(index_start, index_end);   // "1.02 km"
             var distance_arr = distance.split(" "); // [1.02, km]
             if(distance_arr[1] == "mi"){
                 return_dist = Number(distance_arr[0]) * 1.609; 
@@ -175,7 +175,7 @@ class Tweet {
         }
         else if(this.activityType === "walk"){
             var index_end = this.text.indexOf(" walk ");
-            var distance = this.text.substr(index_start, index_end);   // "1.02 km"
+            var distance = this.text.substring(index_start, index_end);   // "1.02 km"
             var distance_arr = distance.split(" "); // [1.02, km]
             if(distance_arr[1] == "mi"){
                 return_dist = Number(distance_arr[0]) * 1.609; 
@@ -186,7 +186,7 @@ class Tweet {
         }
         else if(this.activityType === "bike"){
             var index_end = this.text.indexOf(" bike ");
-            var distance = this.text.substr(index_start, index_end);   // "1.02 km"
+            var distance = this.text.substring(index_start, index_end);   // "1.02 km"
             var distance_arr = distance.split(" "); // [1.02, km]
             if(distance_arr[1] == "mi"){
                 return_dist = Number(distance_arr[0]) * 1.609;
