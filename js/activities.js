@@ -51,9 +51,6 @@ function parseTweets(runkeeper_tweets) {
 	sports={type:"sports",count:0},gym={type:"MySports Gym",count:0},dance={type:"dance",count:0};
 
 	var unaccounted = 0;
-	// var run=0,nordic=0,walk=0,mtnbike=0,bike=0,swim=0,crossfit=0,hike=0,elliptical=0,strength=0,
-	// spinning=0,circuit=0,bootcamp=0,core=0,group=0,barre=0,row=0,ski=0,freestyle=0,activity=0,yoga=0,
-	// skate=0,chair=0,snowboard=0,stair=0;
 
 	for(var i=0; i<tweet_array.length; ++i){
 		if(tweet_array[i].source === "completed_event"){
@@ -164,18 +161,26 @@ function parseTweets(runkeeper_tweets) {
 	meditation,pilates,boxing,sports,gym,dance);
 	activities.sort(function(a, b){return b.count-a.count});	// sorting descending count order
 
-	$('#numberActivities').text(activities.length);
+	var participated_activities = 0;
+	var participated_activities_array = [];
+	for(var i = 0; i < activities.length; ++i){
+		if(activities[i].count != 0){
+			++participated_activities;
+			participated_activities_array.push(activities[i]);
+		}
+	}
+	$('#numberActivities').text(participated_activities);
 	$('#firstMost').text(activities[0].type);
 	$('#secondMost').text(activities[1].type);
 	$('#thirdMost').text(activities[2].type);
-	console.log(unaccounted,"= unaccounted for activities.");
+	//console.log(unaccounted,"= unaccounted for activities.");
 
 	// ACTIVITY=Y, COUNT=X
 	activity_vis_spec = {
 	  "$schema": "https://vega.github.io/schema/vega-lite/v2.6.0.json",
 	  "description": "A graph of the number of Tweets containing each type of activity.",
 	  "data": {
-	    "values": activities
+	    "values": participated_activities_array
 	  },
 	  //TODO: Add mark and encoding
 	  "encoding": {
@@ -219,9 +224,7 @@ function parseTweets(runkeeper_tweets) {
 	mean_distances.push(run);
 	mean_distances.push(walk);
 	mean_distances.push(bike);
-	// mean distances in descending order
-	mean_distances.sort(function(a, b){return (b.dist_count/b.count)-(a.dist_count/a.count)})
-	//mean_distances.push(math.format((run.dist_count/run.count), {notation: 'fixed', precision: 2}));
+	mean_distances.sort(function(a, b){return (b.dist_count/b.count)-(a.dist_count/a.count)}) // mean distances in descending order
 	$('#longestActivityType').text(mean_distances[0].type);
 	$('#shortestActivityType').text(mean_distances[mean_distances.length-1].type);
 
@@ -294,7 +297,7 @@ function parseTweets(runkeeper_tweets) {
 	}
 	graph2_vis_spec = {
 	  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
-	  "description": "A scatterplot showing horsepower and miles per gallons.",
+	  "description": "A graph of the number of Tweets containing the top 3 types of activities and their recorded distances by day of the week.",
 	  "width": 200,
 	  "height": 200,
 	  "data": {"values": graph2},
@@ -310,7 +313,7 @@ function parseTweets(runkeeper_tweets) {
 
 	graph3_vis_spec = {
 	  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
-	  "description": "A scatterplot showing horsepower and miles per gallons.",
+	  "description": "A graph of the number of Tweets containing the top 3 types of activities and their calculated mean distances by day of the week.",
 	  "width": 200,
 	  "height": 200,
 	  "data": {"values": graph2},
