@@ -1,3 +1,32 @@
+function convertDay(num){
+	var day="Sun";
+	switch(num){
+		case 0:
+			day="Sun";
+			break;
+		case 6:
+			day="Sat";
+			break;
+		case 5:
+			day="Fri";
+			break;
+		case 4:
+			day="Thu";
+			break;
+		case 3:
+			day="Wed";
+			break;
+		case 2:
+			day="Tue";
+			break;
+		case 1:
+			day="Mon";
+			break;
+		default:
+			break;
+	}
+	return day;
+}
 function parseTweets(runkeeper_tweets) {
 	//Do not proceed if no tweets loaded
 	if(runkeeper_tweets === undefined) {
@@ -141,6 +170,34 @@ function parseTweets(runkeeper_tweets) {
 	$('#thirdMost').text(activities[2].type);
 	console.log(unaccounted,"= unaccounted for activities.");
 
+	// ACTIVITY=Y, COUNT=X
+	activity_vis_spec = {
+	  "$schema": "https://vega.github.io/schema/vega-lite/v2.6.0.json",
+	  "description": "A graph of the number of Tweets containing each type of activity.",
+	  "data": {
+	    "values": activities
+	  },
+	  //TODO: Add mark and encoding
+	  "encoding": {
+	  	"y": {"field": "type", "type": "ordinal"},
+    	"x": {"field": "count", "type": "quantitative"}
+      },
+	  "layer": [
+	    {"mark": "bar"},
+	    {"mark": 
+	    	{
+		      "type": "text",
+		      "align": "left",
+		      "baseline": "middle",
+		      "dx": 3
+		  	},
+	    	"encoding": {"text": {"field": "count", "type": "quantitative"}}
+	  	}
+	  ]
+	};
+	vegaEmbed('#activityVis', activity_vis_spec, {actions:false});
+
+
 	// place dist_counter in run, walk and bike. parse distances in tweet.ts
 	// check that its a comp event first 
 	for(var i=0; i<tweet_array.length; ++i){
@@ -218,21 +275,78 @@ function parseTweets(runkeeper_tweets) {
 	days.sort(function(a, b){return (b.dist/b.count)-(a.dist/a.count)});
 	$('#weekdayOrWeekendLonger').text(days[0].day);
 
-	activity_vis_spec = {
-	  "$schema": "https://vega.github.io/schema/vega-lite/v2.6.0.json",
-	  "description": "A graph of the number of Tweets containing each type of activity.",
-	  "data": {
-	    "values": tweet_array
-	  }
-	  //TODO: Add mark and encoding
-	};
-	vegaEmbed('#activityVis', activity_vis_spec, {actions:false});
-
 	//TODO: create the visualizations which group the three most-tweeted activities by the day of the week.
 	//Use those visualizations to answer the questions about which activities tended to be longest and when.
-}
 
+	var graph2 = [];
+	for(var i=0; i<tweet_array.length; ++i){
+		if(tweet_array[i].source === "completed_event"){
+			if(tweet_array[i].activityType === "run" || tweet_array[i].activityType === "walk" || tweet_array[i].activityType === "bike")
+				//var day = convertDay(tweet_array[i].time.getDay());
+				//console.log(typeof day);
+				graph2.push({
+					"distance (km)":tweet_array[i].distance,
+					"activity type":tweet_array[i].activityType,
+					"day":convertDay(tweet_array[i].time.getDay()) // convertDay(tweet_array[i].time.getDay())
+				});
+				//console.log(graph2[i].day);
+		}
+	}
+	graph2_vis_spec = {
+	  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+	  "description": "A scatterplot showing horsepower and miles per gallons.",
+	  "width": 200,
+	  "height": 200,
+	  "data": {"values": graph2},
+	  "mark": "circle",
+	  "encoding": {
+	    "x": {"field": "day", "type": "nominal", "sort": ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]},
+	    "y": {"field": "distance (km)", "type": "quantitative"},
+	    "color": {"field": "activity type", "type": "nominal"},
+	    "shape": {"field": "activity type", "type": "nominal"}
+	  }
+	}
+	vegaEmbed('#distanceVis', graph2_vis_spec, {actions:false});
+
+	graph3_vis_spec = {
+	  "$schema": "https://vega.github.io/schema/vega-lite/v2.json",
+	  "description": "A scatterplot showing horsepower and miles per gallons.",
+	  "width": 200,
+	  "height": 200,
+	  "data": {"values": graph2},
+	  "mark": "point",
+	  "encoding": {
+	    "x": {"field": "day", "type": "nominal", "sort": ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]},
+	    "y": {"aggregate": "mean", "field": "distance (km)", "type": "quantitative"},
+	    "color": {"field": "activity type", "type": "nominal"},
+	    "shape": {"field": "activity type", "type": "nominal"}
+	  }
+	}
+}
+function switchGraph(){
+	var count=0;
+	$("#aggregate").click(function(){
+		if($("#aggregate").text() === "Show means"){
+			$("#aggregate").text("Show all activities");
+			$("#distanceVis").toggle();
+			if(count==0){
+				++count;
+				vegaEmbed('#distanceVisAggregated', graph3_vis_spec, {actions:false});
+			}
+			else
+				$("#distanceVisAggregated").toggle();
+		}
+		else if($("#aggregate").text() === "Show all activities"){
+			$("#aggregate").text("Show means");
+			$("#distanceVisAggregated").toggle();
+			$("#distanceVis").toggle();
+		}
+	})
+}
 //Wait for the DOM to load
 $(document).ready(function() {
 	loadSavedRunkeeperTweets().then(parseTweets);
+});
+$(document).ready(function() {
+	switchGraph();
 });

@@ -9,7 +9,7 @@ class Tweet {
 
 	//returns either 'live_event', 'achievement', 'completed_event', or 'miscellaneous'
     get source():string {
-        var sub_text = this.text.substr(0,15);
+        var sub_text = this.text.substring(0,15);
 
         if(sub_text.startsWith("Just completed") || sub_text.startsWith("Just posted")){
             return "completed_event";
@@ -30,7 +30,7 @@ class Tweet {
         //TODO: identify whether the tweet is written
 
         //var hyphen_occurrences = this.text.match(/-/g).length;
-        if(this.text.includes("-") && !(this.text.includes("TomTom")) ){
+        if( (this.text.includes("-") && !(this.text.includes("TomTom"))) || this.source==="miscellaneous"){
             return true;
         }
         return false;
@@ -41,9 +41,13 @@ class Tweet {
             return "";
         }
         //TODO: parse the written text from the tweet
+        if(this.source==="miscellaneous"){
+            var writtentext_end = this.text.indexOf(" http");
+            return this.text.substring(0, writtentext_end);
+        }
         var writtentext_start = this.text.indexOf("-");
         var writtentext_end = this.text.indexOf(" http");
-        var writtentext = this.text.substr(writtentext_start, writtentext_end);
+        var writtentext = this.text.substring(writtentext_start, writtentext_end);
         return writtentext;
         //return "";
     }
@@ -200,6 +204,38 @@ class Tweet {
 
     getHTMLTableRow(rowNumber:number):string {
         //TODO: return a table row which summarizes the tweet with a clickable link to the RunKeeper activity
-        return "<tr></tr>";
+        var table_row = "<tr>";
+        
+        var cell_rownumber = "<td>"
+        cell_rownumber = cell_rownumber.concat(rowNumber.toString());
+        cell_rownumber = cell_rownumber.concat("</td>");
+
+        var cell_activity = "<td>"
+        cell_activity = cell_activity.concat(this.source);
+        cell_activity = cell_activity.concat("</td>");
+
+        // creating clickable link
+        var link_start = this.text.indexOf("http");
+        var link_end = this.text.indexOf(" #");
+        var link = this.text.substring(link_start, link_end);
+        var clickable_link = "<a href=\"";
+        clickable_link = clickable_link.concat(link);
+        clickable_link = clickable_link.concat("\">");
+        clickable_link = clickable_link.concat(link);
+        clickable_link = clickable_link.concat("</a>");
+        var text_with_link = this.text;
+        text_with_link = text_with_link.replace(link,clickable_link);
+        // END OF creating clickable link
+
+        var cell_text = "<td>"
+        cell_text = cell_text.concat(text_with_link);
+        cell_text = cell_text.concat("</td>");
+
+        table_row = table_row.concat(cell_rownumber);
+        table_row = table_row.concat(cell_activity);
+        table_row = table_row.concat(cell_text);
+    
+        table_row = table_row.concat("</tr>")
+        return table_row;
     }
 }
