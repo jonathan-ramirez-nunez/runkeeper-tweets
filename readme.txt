@@ -1,23 +1,7 @@
---Readme document for *author*--
+--Readme document--
 
-1. How long, in hours, did it take you to complete this assignment?
-23-26 hours
+Description:
+Used JavaScript and TypeScript to create a webpage report which may help a potential researcher understand a week’s worth of static or live Tweets from RunKeeper, a popular running app. This webpage report was separated into three different pages: about-the-data page, descriptions page, activities page. The about-the-data page details which percentage of Runkeeper users Tweet about a completed event, a live event, achievement, or any other mescellaneous activity. The descriptions page allows one to search through Runkeeper tweets by any keywords that the author of the Tweet may have written in that Tweet's description. The activities page displays all the different activities mentioned within the Tweets and how many of each.
 
-
-2. What online resources did you consult when completing this assignment? (list specific URLs)
-stackoverflow
-mathjs.org
-w3schools
-developer.mozilla.org
-
-
-3. What classmates or other individuals did you consult as part of this assignment? What did you discuss?
-Did not consult/discuss assignment with other classmates
-
-
-4. Did you add any bonus features to your submission? If so, what are they and how should we see them?
-No
-
-
-5. Is there anything special we need to know in order to run your code?
-No
+Code Details:
+Each of these webpages required parsing through JSON-formatted data and organizing that data into a presentable report. The webpage report by default uses a week's worth of saved Runkeeper Tweets from "runkeeper-tweets/data/saved_tweets.json". However, the user may press the "Switch to live tweets" button located on the upper-right-hand corner of each page of the webpage report to look over the same information about Runkeeper tweets, but now about live/oncurring tweets. To make this possible, I created a development account for Twitter to use Twitter's search API to read tweets. JavaScript's fetch API was used.
